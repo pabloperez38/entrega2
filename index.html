@@ -13,60 +13,74 @@
     </head>
     <body>
         <div class="container my-4">
-            <h1 class="text-center fs-3">Simulador de Turnos Médicos</h1>
+            <div class="row">
+                <div class="col-md-12">
+                    <h1 class="text-center fs-3">
+                        Simulador de Turnos Médicos
+                    </h1>
 
-            <form id="formTurno" class="mb-4">
-                <div class="mb-3">
-                    <label for="nombre" class="form-label"
-                        >Nombre del paciente</label
-                    >
-                    <input type="text" class="form-control" id="nombre" />
+                    <form id="formTurno" class="mb-4">
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label"
+                                >Nombre del paciente</label
+                            >
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="nombre" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="edad" class="form-label">Edad</label>
+                            <input
+                                type="number"
+                                class="form-control"
+                                id="edad" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="especialidad" class="form-label"
+                                >Especialidad</label
+                            >
+                            <select class="form-select" id="especialidad">
+                                <option value="">Seleccione una opción</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            Registrar Turno
+                        </button>
+                    </form>
+
+                    <h4>Listado de Turnos</h4>
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="tablaTurnos">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre</th>
+                                    <th>Edad</th>
+                                    <th>Especialidad</th>
+                                    <th>Hora</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <div class="mb-3">
+                        <button
+                            class="btn btn-info"
+                            onclick="mostrarEstadisticas()">
+                            Mostrar Estadísticas
+                        </button>
+                        <button
+                            class="btn btn-warning"
+                            onclick="calcularTiempoEspera()">
+                            Calcular Tiempo de Espera
+                        </button>
+                    </div>
+
+                    <pre id="salida" class="bg-light p-3"></pre>
                 </div>
-                <div class="mb-3">
-                    <label for="edad" class="form-label">Edad</label>
-                    <input type="number" class="form-control" id="edad" />
-                </div>
-                <div class="mb-3">
-                    <label for="especialidad" class="form-label"
-                        >Especialidad</label
-                    >
-                    <select class="form-select" id="especialidad">
-                        <option value="">Seleccione una opción</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-primary">
-                    Registrar Turno
-                </button>
-            </form>
-
-            <h4>Listado de Turnos</h4>
-
-            <table class="table table-bordered" id="tablaTurnos">
-                <thead class="table-light">
-                    <tr>
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th>Edad</th>
-                        <th>Especialidad</th>
-                        <th>Hora</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-
-            <div class="mb-3">
-                <button class="btn btn-info" onclick="mostrarEstadisticas()">
-                    Mostrar Estadísticas
-                </button>
-                <button
-                    class="btn btn-warning"
-                    onclick="calcularTiempoEspera()">
-                    Calcular Tiempo de Espera
-                </button>
             </div>
-
-            <pre id="salida" class="bg-light p-3"></pre>
         </div>
     </body>
 </html>
