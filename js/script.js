@@ -8,7 +8,6 @@ document.getElementById("formTurno").addEventListener("submit", function (e) {
     registrarTurno();
 });
 
-
 function cargarOpcionesEspecialidad() {
     const select = document.getElementById("especialidad");
 
@@ -21,7 +20,6 @@ function cargarOpcionesEspecialidad() {
 }
 
 function registrarTurno() {
-
     const inputNombre = document.getElementById("nombre");
     const inputEdad = document.getElementById("edad");
     const inputEspecialidad = document.getElementById("especialidad");
@@ -32,33 +30,39 @@ function registrarTurno() {
 
     // Validación campo nombre vacío
     if (!nombre) {
-        fncSweetAlert("error", "El nombre no puede estar vacío.", null);
-        inputNombre.focus();
+        fncSweetAlert("error", "El nombre no puede estar vacío.", () => {
+            inputNombre.focus(); // ✅ Se ejecuta después del cierre automático
+        });
         return;
     }
 
     // Validación nombre con números
+
     if (/\d/.test(nombre)) {
-        fncSweetAlert("error", "El nombre no debe contener números.", null);
-        inputNombre.focus();
+        fncSweetAlert("error", "El nombre no debe contener números.", () => {
+            inputNombre.focus();
+        });
         return;
     }
 
     // Validación edad
+
     if (isNaN(edad) || edad <= 0) {
         fncSweetAlert(
             "error",
             "La edad debe ser un número mayor que cero.",
-            null
+            () => {
+                inputEdad.focus(); // ✅ Se ejecuta después del cierre automático
+            }
         );
-        inputEdad.focus();
         return;
     }
 
     // Validación especialidad no seleccionada
     if (especialidadIndex === "") {
-        fncSweetAlert("error", "Debe seleccionar una especialidad.", null);
-        inputEspecialidad.focus();
+        fncSweetAlert("error", "Debe seleccionar una especialidad.", () => {
+            inputEspecialidad.focus();
+        });
         return;
     }
 
@@ -86,7 +90,7 @@ function registrarTurno() {
 function agregarTurnoATabla(turno) {
     const tbody = document.querySelector("#tablaTurnos tbody");
     const fila = document.createElement("tr");
-    fila.setAttribute("data-id", turno.id); 
+    fila.setAttribute("data-id", turno.id);
 
     fila.innerHTML = `
     <td>${turno.id}</td>
@@ -102,7 +106,6 @@ function agregarTurnoATabla(turno) {
 }
 
 function eliminarTurno(id) {
-
     turnos = turnos.filter((t) => t.id !== id);
 
     guardarTurnosEnLocalStorage();
@@ -190,29 +193,19 @@ function fncSweetAlert(type, text, url) {
           =============================================*/
 
         case "error":
-            if (url == null) {
-                Swal.fire({
-                    position: "top-end",
-                    icon: "error",
-                    title: "Error",
-                    showConfirmButton: false,
-                    timer: 2000,
-                    text: text,
-                });
-            } else {
-                Swal.fire({
-                    position: "top-end",
-                    icon: "error",
-                    title: "Error",
-                    showConfirmButton: false,
-                    timer: 2000,
-                    text: text,
-                }).then((result) => {
-                    if (result.value) {
-                        window.open(url, "_top");
+            Swal.fire({
+                position: "top-end",
+                icon: "error",
+                title: "Error",
+                showConfirmButton: false,
+                timer: 2000,
+                text: text,
+                didClose: () => {
+                    if (typeof url === "function") {
+                        url(); // Ejecuta la función de callback después del cierre
                     }
-                });
-            }
+                },
+            });
 
             break;
 
