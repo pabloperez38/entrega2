@@ -8,7 +8,7 @@ document.getElementById("formTurno").addEventListener("submit", function (e) {
     registrarTurno();
 });
 
-// Cargar dinámicamente las opciones del select
+
 function cargarOpcionesEspecialidad() {
     const select = document.getElementById("especialidad");
 
@@ -21,45 +21,72 @@ function cargarOpcionesEspecialidad() {
 }
 
 function registrarTurno() {
-    const nombre = document.getElementById("nombre").value.trim();
-    const edad = parseInt(document.getElementById("edad").value);
-    const especialidadIndex = parseInt(
-        document.getElementById("especialidad").value
-    );
 
-    if (!nombre || isNaN(edad) || isNaN(especialidadIndex)) {
-        fncSweetAlert(
-            "error",
-            "Por favor, complete todos los campos correctamente.",
-            null
-        );
-        //imprimir("Por favor, complete todos los campos correctamente.");
+    const inputNombre = document.getElementById("nombre");
+    const inputEdad = document.getElementById("edad");
+    const inputEspecialidad = document.getElementById("especialidad");
+
+    const nombre = inputNombre.value.trim();
+    const edad = parseInt(inputEdad.value);
+    const especialidadIndex = inputEspecialidad.value;
+
+    // Validación campo nombre vacío
+    if (!nombre) {
+        fncSweetAlert("error", "El nombre no puede estar vacío.", null);
+        inputNombre.focus();
         return;
     }
 
+    // Validación nombre con números
+    if (/\d/.test(nombre)) {
+        fncSweetAlert("error", "El nombre no debe contener números.", null);
+        inputNombre.focus();
+        return;
+    }
+
+    // Validación edad
+    if (isNaN(edad) || edad <= 0) {
+        fncSweetAlert(
+            "error",
+            "La edad debe ser un número mayor que cero.",
+            null
+        );
+        inputEdad.focus();
+        return;
+    }
+
+    // Validación especialidad no seleccionada
+    if (especialidadIndex === "") {
+        fncSweetAlert("error", "Debe seleccionar una especialidad.", null);
+        inputEspecialidad.focus();
+        return;
+    }
+
+    // Crear turno
     const nuevoTurno = {
         id: proximoTurnoId++,
         nombre,
         edad,
-        especialidad: ESPECIALIDADES[especialidadIndex],
+        especialidad: ESPECIALIDADES[parseInt(especialidadIndex)],
         horaRegistro: new Date().toLocaleTimeString(),
     };
 
+    // Guardar turno
     turnos.push(nuevoTurno);
     guardarTurnosEnLocalStorage();
     agregarTurnoATabla(nuevoTurno);
+
+    // Limpiar formulario
     document.getElementById("formTurno").reset();
-    fncSweetAlert(
-        "success",
-        `Turno #${nuevoTurno.id} registrado para ${nombre}`,
-        null
-    );
+
+    // Mostrar confirmación
+    fncSweetAlert("success", `Turno registrado para ${nombre}`, null);
 }
 
 function agregarTurnoATabla(turno) {
     const tbody = document.querySelector("#tablaTurnos tbody");
     const fila = document.createElement("tr");
-    fila.setAttribute("data-id", turno.id); // NUEVO
+    fila.setAttribute("data-id", turno.id); 
 
     fila.innerHTML = `
     <td>${turno.id}</td>
@@ -75,10 +102,9 @@ function agregarTurnoATabla(turno) {
 }
 
 function eliminarTurno(id) {
-    // Elimina del array
+
     turnos = turnos.filter((t) => t.id !== id);
 
-    // Guarda la lista actualizada en localStorage
     guardarTurnosEnLocalStorage();
 
     // Elimina la fila de la tabla
@@ -107,7 +133,7 @@ function cargarTurnosDesdeLocalStorage() {
 }
 
 function calcularTiempoEspera() {
-    imprimir(""); // ✅ LIMPIA SALIDA ANTERIOR
+    imprimir("");
 
     if (turnos.length === 0) {
         fncSweetAlert("info", "No hay turnos registrados", null);
@@ -123,7 +149,7 @@ function calcularTiempoEspera() {
 }
 
 function mostrarEstadisticas() {
-    imprimir(""); // ✅ LIMPIA SALIDA ANTERIOR
+    imprimir("");
 
     const totalTurnos = turnos.length;
     if (totalTurnos === 0) {
